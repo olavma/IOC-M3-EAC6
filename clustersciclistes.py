@@ -7,7 +7,6 @@ from contextlib import contextmanager, redirect_stderr, redirect_stdout
 import pickle
 
 import pandas as pd
-import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -42,7 +41,6 @@ def EDA(df):
 
 	Returns: None
 	"""
-	
 	logging.debug('\n%s', df.shape)
 	logging.debug('\n%s', df[:5])
 	logging.debug('\n%s', df.columns)
@@ -126,7 +124,6 @@ def visualitzar_clusters(data, labels):
 		os.makedirs(os.path.dirname('img/'))
 	except FileExistsError:
 		pass
-	
 	fig = plt.figure()
 	sns.scatterplot(x='temps_pujada', y='temps_baixada', data=data, hue=labels, palette="rainbow")
 	plt.savefig("img/olav_martos_grafica1.png")
@@ -149,7 +146,8 @@ def associar_clusters_patrons(tipus, model):
 
 	logging.info('\nCentres:')
 	for j in range(len(tipus)):
-		logging.info('{:d}:\t(temps_pujada: {:.1f}\ttemps_baixada: {:.1f})'.format(j, model.cluster_centers_[j][dicc['temps_pujada']], model.cluster_centers_[j][dicc['temps_baixada']]))
+		logging.info("%s:\t(temps_pujada: %s\ttemps_baixada: %s)", j, model.cluster_centers_[j][dicc['temps_pujada']], model.cluster_centers_[j][dicc['temps_baixada']])
+
 
 	# Procés d'assignació
 	ind_label_0 = -1
@@ -227,7 +225,6 @@ def generar_informes(df, tipus):
 		os.makedirs(os.path.dirname('informes/'))
 	except FileExistsError:
 		pass
-	
 	for tip in tipus:
 		fitxer = tip['name'].replace(' ', '_') + '.txt'
 		foutput = open("informes/" + fitxer, "w")
@@ -235,12 +232,11 @@ def generar_informes(df, tipus):
 		indexs = ciclistes_label[t[0]['label']].index
 		for i in indexs:
 			foutput.write(str(i) + '\n')
-		
 		foutput.close()
 
 	logging.info('S\'han generat els informes en la carpeta informes/\n')
 
-def nova_prediccio(dades, model, tipus):
+def nova_prediccio(dades, model):
 	"""
 	Passem nous valors de ciclistes, per tal d'assignar aquests valors a un dels 4 clústers
 
@@ -253,7 +249,6 @@ def nova_prediccio(dades, model, tipus):
 	df_nous_ciclistes_cleaned = clean(df_nous_ciclistes)
 
 	logging.info('\nNous valors:\n%s', df_nous_ciclistes_cleaned[:3])
-	
 	return df_nous_ciclistes_cleaned, model.predict(df_nous_ciclistes_cleaned)
 
 # ----------------------------------------------
@@ -274,7 +269,6 @@ if __name__ == "__main__":
 	true_labels = extract_true_labels(ciclistes_data)
 
 	ciclistes_data = ciclistes_data.drop('tipus', axis=1)
-	
 	visualitzar_pairplot(ciclistes_data)
 
 	# Clustering amb KMeans
@@ -308,7 +302,7 @@ if __name__ == "__main__":
 	logging.debug('\nColumna label:\n%s', ciclistes_data[:5])
 
 	tipus = associar_clusters_patrons(tipus, clustering_model)
-	
+
 	# Guardem la variable tipus
 	with open('model/tipus_dict.pkl', 'wb') as f:
 		pickle.dump(tipus, f)
@@ -330,7 +324,7 @@ if __name__ == "__main__":
 	"""
 
 	logging.debug('\nNous valors:\n%s', nous_ciclistes)
-	df_nous_ciclistes, pred = nova_prediccio(nous_ciclistes, clustering_model, tipus)
+	df_nous_ciclistes, pred = nova_prediccio(nous_ciclistes, clustering_model)
 	logging.info('\nPredicció dels valors:\n%s', pred)
 
 	# Assignació dels nous valors als tipus

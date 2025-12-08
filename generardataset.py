@@ -1,8 +1,8 @@
 import os
 import logging
-import numpy as np
 import random
 import csv
+import numpy as np
 
 # Creació del logger
 logger = logging.getLogger("generardataset")
@@ -30,7 +30,6 @@ def generar_dataset(num, ind, dicc, str_ciclistes='data/ciclistes.csv'):
 			temps_p = max(0, int(np.random.normal(tipus["mu_p"], tipus["sigma"])))
 			temps_b = max(0, int(np.random.normal(tipus["mu_b"], tipus["sigma"])))
 			total = temps_p + temps_b
-			
 			writer.writerow([ind + i, tipus["name"], temps_p, temps_b, total])
 		return str_ciclistes
 
