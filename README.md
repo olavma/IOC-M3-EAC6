@@ -47,6 +47,7 @@ Si clones el repositori, tots els fitxers i imatges que son creades per els scri
 Mitjançant un model de KMeans que es troba en el directori *model/clustering_model.pkl* es resol el problema de trobar els clústers per a les dades simulades.
 
 S'obtenen 4 clústers.
+
 ![Clusters](img/olav_martos_grafica1.png)
 
 # Llicència <a name="licence"></a>
