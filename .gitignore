@@ -1,12 +1,19 @@
-# Entorno virtual
+# Virtual Environment
 venv/
 
-# Archivos compilados
+# Cache de Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Configuración de VSCode
+# Configuració de VSCode
 .vscode/
 
+# Coverage i cache de python dins de tests/
+tests/__pycache__/
+.coverage
+
+# MLflow
+mlruns/*
+mlflow.db

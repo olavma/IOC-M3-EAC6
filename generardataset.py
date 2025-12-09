@@ -11,11 +11,15 @@ ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG) # canviar a DEBUG mentre es programa
 logger.addHandler(ch)
 
-def generar_dataset(num, ind, dicc, str_ciclistes='data/ciclistes.csv'):
+def generar_dataset(num, ind, dicc, str_ciclistes):
 	"""
 	Genera els temps dels ciclistes, de forma aleatòria, però en base a la informació del diccionari
 	num és el número de files/ciclistes a generar. ind és l'index/identificador/dorsal.
 	"""
+
+	if isinstance(dicc, dict):
+		dicc = [dicc]
+	os.makedirs(os.path.dirname(str_ciclistes), exist_ok=True)
 
 	# Obrim el fitxer str_ciclistes
 	with open(str_ciclistes, "w", newline='') as f:
