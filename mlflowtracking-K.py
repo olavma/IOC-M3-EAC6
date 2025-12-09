@@ -6,6 +6,8 @@ import mlflow
 from mlflow.tracking import MlflowClient
 import os
 import sys
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 sys.path.append("..")
 from clustersciclistes import load_dataset, clean, extract_true_labels, clustering_kmeans, homogeneity_score, completeness_score, v_measure_score
@@ -42,7 +44,7 @@ if __name__ == "__main__":
 	# Esborrem tots els runs de l'experiment
 	for run in runs:
 		mlflow.delete_run(run.info.run_id)
-		remove_run_dir(get_run_dir(run.info.artifacts_uri))
+		remove_run_dir(get_run_dir(run.info.artifact_uri))
 	
 	path_dataset = './data/ciclistes.csv'
 	ciclistes_data = load_dataset(path_dataset)
@@ -79,5 +81,11 @@ if __name__ == "__main__":
 			mlflow.log_metric("v", v_score)
 			
 			mlflow.log_artifact(dataset_path)
+			
+			os.makedirs("img", exist_ok=True)
+			fig = plt.figure()
+			sns.scatterplot(x='temps_pujada', y='temps_baixada', data=ciclistes_data, hue=data_labels, palette="rainbow")
+			plt.savefig(f"img/olav_martos_grafica_K{K}.png")
+			fig.clf()
 
 	print('s\'han generat els runs')
