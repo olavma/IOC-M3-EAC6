@@ -13,3 +13,7 @@ __pycache__/
 # Coverage i cache de python dins de tests/
 tests/__pycache__/
 .coverage
+
+# MLflow
+mlruns/*
+mlflow.db
