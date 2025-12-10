@@ -7,21 +7,16 @@ import sys
 import pickle
 import pandas as pd
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, ROOT)
-
 from generardataset import generar_dataset
-from clustersciclistes import (
-    load_dataset, clean, extract_true_labels,
-    clustering_kmeans, homogeneity_score,
-    completeness_score, v_measure_score
-)
+from clustersciclistes import (load_dataset, clean, extract_true_labels, clustering_kmeans, homogeneity_score, completeness_score, v_measure_score)
 
 class TestGenerarDataset(unittest.TestCase):
     """
     classe TestGenerarDataset
     """
 
+    # Passem de global a una funció setUp, per evitar problemes de detecció/reconeixement
+    # Es va canviar per fer funcionar coverage, i funciona igualment sense coverage (detecta igualment que son 6 tests)
     def setUp(self):
         self.mu_p_be = 3240
         self.mu_p_me = 4268
@@ -39,34 +34,50 @@ class TestGenerarDataset(unittest.TestCase):
         os.makedirs('tests/data', exist_ok=True)
 
     def cargar_csv(self):
+        """
+        La funció generar_dataset() tan sols genera el dataset, no el retorna
+        """
         return pd.read_csv('tests/data/ciclistes.csv', sep=';')
 
     def get_col(self, df, posibles):
-        """Devuelve la primera columna existente de una lista."""
+        """
+        Retorna la primera columna existent d'una llista.
+        No sé perquè, però sense aqueste funció no pot trobar la columna temps_pujada
+        ni temps_baixada
+        """
         for col in posibles:
             if col in df.columns:
                 return col
-        raise KeyError(f"Ninguna de estas columnas existe: {posibles}")
+        raise KeyError(f"Ninguna d'aquestes columnes existeix: {posibles}")
 
     def test_longituddataset(self):
+        """
+		Test la longitud de l'array
+		"""
         generar_dataset(200, 1, self.dicc[0], 'tests/data/ciclistes.csv')
         df = self.cargar_csv()
         self.assertEqual(len(df), 200)
 
     def test_valorsmitjatp(self):
+        """
+		Test del valor mitjà del tp
+		"""
         generar_dataset(100, 1, self.dicc[0], 'tests/data/ciclistes.csv')
         df = self.cargar_csv()
 
-        col_tp = self.get_col(df, ["temps_pujada", "tp"])
+        col_tp = self.get_col(df, ["temps_pujada"])
         tp_mig = df[col_tp].mean()
 
         self.assertLess(tp_mig, 3400)
 
     def test_valorsmitjatb(self):
+        """
+		Test del valor mitjà del tb
+		"""
         generar_dataset(100, 1, self.dicc[1], 'tests/data/ciclistes.csv')
         df = self.cargar_csv()
 
-        col_tb = self.get_col(df, ["temps_baixada", "tb"])
+        col_tb = self.get_col(df, ["temps_baixada"])
         tb_mig = df[col_tb].mean()
 
         self.assertGreater(tb_mig, 2000)
@@ -76,11 +87,13 @@ class TestClustersCiclistes(unittest.TestCase):
     classe TestClustersCiclistes
     """
 
+    # Passem de global a una funció setUpClass, per evitar problemes de detecció/reconeixement
+    # Es va canviar per fer funcionar coverage, i funciona igualment sense coverage (detecta igualment que son 6 tests)
     @classmethod
     def setUpClass(cls):
         path_dataset = 'tests/data/ciclistes.csv'
 
-        # Asegurar dataset inicial para evitar errores
+        # Assegurar dataset inicial per evitar errors
         if not os.path.exists(path_dataset):
             os.makedirs('tests/tests/data', exist_ok=True)
             generar_dataset(200, 1, {"name": "BEBB", "mu_p": 3240, "mu_b": 1440, "sigma": 240}, path_dataset)
@@ -114,7 +127,6 @@ class TestClustersCiclistes(unittest.TestCase):
         Comprovem que el fitxer clustering_model.pkl existeix
         """
         self.assertTrue(os.path.isfile('tests/model/clustering_model.pkl'))
-
 
 if __name__ == '__main__':
     unittest.main()

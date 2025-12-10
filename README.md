@@ -3,7 +3,9 @@
 1. [Introducció](#introduccio)
 2. [Execució](#run)
 3. [Clustering](#cluster)
-4. [Llicencia](#licence)
+4. [Testing](#test)
+5. [MLflow](#mlflow)
+6. [Llicencia](#licence)
 
 # Introducció <a name="introduccio"></a>
 Es tracta de l'exercici d'avaluació continua nº6, per el Modul nº3 del curs de IA y ML d'IOC.
@@ -49,6 +51,35 @@ Mitjançant un model de KMeans que es troba en el directori *model/clustering_mo
 S'obtenen 4 clústers.
 
 ![Clusters](img/olav_martos_grafica1.png)
+
+# Testing <a name="test"></a>
+Des de l'arrel del projecte:
+```
+$ python -m unittest discover -s tests
+```
+
+O bé:
+```
+$ python -m unittest tests/testporcanto.py
+```
+
+Son 6 tests en total
+
+# MLflow <a name="mlflow"></a>
+Aquest projecte utitliza **MLflow** per registrar experiments de variació de paràmetre K en els clusters de ciclistes.
+
+El script pot generar imatges i datasets, i el *run* de l'experiment es guardarà en el directori mlruns/ (el contigut d'aquest direcori no es puja a GitHub, perquè son fitxers binaris i demés)
+
+Es pot executar de dues formes:
+* CLI
+```
+$ python mlflowtracking-K.pt
+```
+
+* GUI
+```
+$ mlflow ui --port 5000
+```
 
 # Llicència <a name="licence"></a>
 Olav Martos (2025)

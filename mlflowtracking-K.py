@@ -17,7 +17,7 @@ project_dir = os.path.dirname(os.path.abspath(__file__))
 mlruns_dir = os.path.join(project_dir, "mlruns")
 mlflow.set_tracking_uri(f"file://{mlruns_dir}")
 
-# Client MLflow, si no es queixa
+# Client MLflow, aixì no es queixa
 client = MlflowClient()
 
 def get_run_dir(artifacts_uri):
